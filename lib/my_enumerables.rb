@@ -10,7 +10,7 @@ module Enumerable
       index = index.next
     end
 
-    return self
+    self
   end
 
   def my_select
@@ -39,6 +39,6 @@ class Array
       yield self[i]
     end
 
-    return self
+    self
   end
 end
