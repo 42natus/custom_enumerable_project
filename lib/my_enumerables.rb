@@ -28,7 +28,7 @@ module Enumerable
   def my_all?(object = nil)
     # argument `object` is priority criterion if given
     if object
-      self.each { |each| return false unless object === each }
+      self.my_each { |each| return false unless object === each }
 
       return true
     end
@@ -40,14 +40,14 @@ module Enumerable
     end
 
     # no block and no argument given, return truthiness of every element
-    self.each { |each| return false if [nil, false].include? each }
+    self.my_each { |each| return false if [nil, false].include? each }
 
     true
   end
 
   def my_any?(pattern = nil)
     if pattern
-      self.each { |each| return true if pattern === each }
+      self.my_each { |each| return true if pattern === each }
 
       return false
     end
@@ -59,7 +59,7 @@ module Enumerable
     end
 
     # no block and no argument given, return truthiness of any element
-    self.each { |each| return true unless [nil, false].include? each }
+    self.my_each { |each| return true unless [nil, false].include? each }
 
     false
   end
@@ -67,7 +67,7 @@ module Enumerable
   def my_none?(pattern = nil)
     # argument `object` is priority criterion if given
     if pattern
-      self.each { |each| return false if pattern === each }
+      self.my_each { |each| return false if pattern === each }
 
       return true
     end
@@ -79,7 +79,7 @@ module Enumerable
     end
 
     # no block and no argument given, return truthiness of no element
-    self.each { |each| return false unless [nil, false].include? each }
+    self.my_each { |each| return false unless [nil, false].include? each }
 
     true
   end
