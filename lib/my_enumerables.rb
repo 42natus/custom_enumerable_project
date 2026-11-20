@@ -24,6 +24,12 @@ module Enumerable
 
     result
   end
+
+  def my_all?
+    self.my_each { |each| return false unless yield(each) }
+
+    true
+  end
 end
 
 # You will first have to define my_each
