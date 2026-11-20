@@ -63,6 +63,26 @@ module Enumerable
 
     false
   end
+
+  def my_none?(pattern = nil)
+    # argument `object` is priority criterion if given
+    if pattern
+      self.each { |each| return false if pattern === each }
+
+      return true
+    end
+
+    if block_given?
+      self.my_each { |each| return false if yield(each) }
+
+      return true
+    end
+
+    # no block and no argument given, return truthiness of no element
+    self.each { |each| return false unless [nil, false].include? each }
+
+    true
+  end
 end
 
 # You will first have to define my_each
