@@ -44,6 +44,25 @@ module Enumerable
 
     true
   end
+
+  def my_any?(pattern = nil)
+    if pattern
+      self.each { |each| return true if pattern === each }
+
+      return false
+    end
+
+    if block_given?
+      self.my_each { |each| return true if yield(each) }
+
+      return false
+    end
+
+    # no block and no argument given, return truthiness of any element
+    self.each { |each| return true unless [nil, false].include? each }
+
+    false
+  end
 end
 
 # You will first have to define my_each
