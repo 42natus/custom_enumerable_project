@@ -83,6 +83,27 @@ module Enumerable
 
     true
   end
+
+  def my_count(object = nil)
+    total = 0
+
+    if object
+      self.my_each { |each| total += 1 if each == object }
+
+      return total
+    end
+
+    if block_given?
+      self.my_each { |each| total += 1 if yield(each) }
+
+      return total
+    end
+
+    # no block and no argument given, return the size of the enumerable
+    self.my_each { total += 1 }
+
+    return total
+  end
 end
 
 # You will first have to define my_each
