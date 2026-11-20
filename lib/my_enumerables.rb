@@ -25,8 +25,22 @@ module Enumerable
     result
   end
 
-  def my_all?
-    self.my_each { |each| return false unless yield(each) }
+  def my_all?(object = nil)
+    # argument `object` is priority criterion if given
+    if object
+      self.each { |each| return false unless object === each }
+
+      return true
+    end
+
+    if block_given?
+      self.my_each { |each| return false unless yield(each) }
+
+      return true
+    end
+
+    # no block and no argument given, return truthiness of every element
+    self.each { |each| return false if [nil, false].include? each }
 
     true
   end
