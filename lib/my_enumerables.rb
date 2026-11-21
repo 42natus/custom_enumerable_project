@@ -114,6 +114,14 @@ module Enumerable
 
     mapped
   end
+
+  def my_inject(initial_value = nil)
+    self.my_each do |each|
+      initial_value = initial_value.nil? ? each : yield(initial_value, each)
+    end
+
+    initial_value
+  end
 end
 
 # You will first have to define my_each
