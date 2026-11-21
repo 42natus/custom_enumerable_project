@@ -133,8 +133,8 @@ class Array
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    for i in 0...self.size
-      yield self[i]
+    for item in self
+      yield item
     end
 
     self
