@@ -140,3 +140,16 @@ class Array
     self
   end
 end
+
+# Custom `each` (`each_pair`) for Hash class.
+class Hash
+  def my_each_pair
+    return enum_for(__method__) unless block_given?
+
+    for key, value in self
+      yield key, value
+    end
+
+    self
+  end
+end
