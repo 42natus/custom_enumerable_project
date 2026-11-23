@@ -4,6 +4,7 @@ require_relative '../lib/my_enumerables'
 
 RSpec.describe Enumerable do
   subject(:enumerable) { [1, 1, 2, 3, 5, 8, 13, 21, 34] }
+  subject(:enumerable_hash) { {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6} }
 
   describe '#my_each_with_index' do
     context 'when given a block' do
@@ -14,6 +15,11 @@ RSpec.describe Enumerable do
         end
 
         expect(my_each_with_index_results).to eq(enumerable)
+      end
+
+      it 'returns the original enumerable (hash)' do
+        my_each_with_index_results = enumerable_hash.my_each_with_index { |_element| }
+        expect(my_each_with_index_results).to eq(enumerable_hash)
       end
 
       it 'executes the block for each element and index' do
@@ -30,6 +36,21 @@ RSpec.describe Enumerable do
 
         expect(my_each_with_index_results).to eq(each_with_index_results)
       end
+
+      it 'executes the block for each element and index (hash)' do
+        my_each_with_index_results = []
+        each_with_index_results = []
+
+        enumerable_hash.my_each_with_index do |element, index|
+          my_each_with_index_results << [element * 2, index * 2]
+        end
+
+        enumerable_hash.each_with_index do |element, index|
+          each_with_index_results << [element * 2, index * 2]
+        end
+
+        expect(my_each_with_index_results).to eq(each_with_index_results)
+      end
     end
 
     context 'when not given a block' do
@@ -37,11 +58,22 @@ RSpec.describe Enumerable do
         expect(enumerable.my_each_with_index).to be_a Enumerator
       end
 
+      it 'returns an Enumerator (hash)' do
+        expect(enumerable_hash.my_each_with_index).to be_a Enumerator
+      end
+
       it 'contains the elements and indices of the receiving array' do
         expect(enumerable.my_each_with_index.to_a).to eq(
           [[1, 0], [1, 1], [2, 2],
           [3, 3], [5, 4], [8, 5],
           [13, 6], [21, 7], [34, 8]]
+        )
+      end
+
+      it 'contains the elements and indices of the receiving array (hash)' do
+        expect(enumerable_hash.my_each_with_index.to_a).to eq(
+          [[[:a, 1], 0], [[:b, 2], 1], [[:c, 3], 2],
+          [[:d, 4], 3], [[:e, 5], 4], [[:f, 6], 5]]
         )
       end
     end

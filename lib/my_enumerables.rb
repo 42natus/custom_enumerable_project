@@ -3,7 +3,7 @@ module Enumerable
   def my_each_with_index
     return to_enum(:my_each_with_index) unless block_given?
 
-    enumerable = self.is_a? Hash ? self.to_a : self
+    enumerable = self.is_a?(Hash) ? self.to_a : self
     
     index = 0
 
