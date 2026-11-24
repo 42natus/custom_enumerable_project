@@ -149,7 +149,7 @@ module Enumerable
   end
 
   def my_inject(initial_value = nil)
-    self.my_each do |each|
+    self.to_a.my_each do |each|
       initial_value = initial_value.nil? ? each : yield(initial_value, each)
     end
 
