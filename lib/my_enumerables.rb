@@ -137,7 +137,13 @@ module Enumerable
 
     mapped = []
 
-    self.my_each { |each| mapped << yield(each) }
+    array_proc = Proc.new { |each| mapped << yield(each) }
+
+    hash_proc = Proc.new { |key, val| mapped << yield(key, val) }
+
+    transformer = self.is_a?(Array) ? array_proc : hash_proc
+
+    self.my_each(&transformer)
 
     mapped
   end
