@@ -84,19 +84,25 @@ module Enumerable
   def my_none?(pattern = nil)
     # argument `object` is priority criterion if given
     if pattern
-      self.my_each { |each| return false if pattern === each }
+      self.to_a.my_each { |each| return false if pattern === each }
 
       return true
     end
 
     if block_given?
-      self.my_each { |each| return false if yield(each) }
+      array_proc = Proc.new { |each| return false if yield(each) }
+
+      hash_proc = Proc.new { |key, val| return false if yield(key, val) }
+
+      check = self.is_a?(Array) ? array_proc : hash_proc
+
+      self.my_each(&check)
 
       return true
     end
 
     # no block and no argument given, return truthiness of no element
-    self.my_each { |each| return false unless [nil, false].include? each }
+    self.to_a.my_each { |each| return false unless [nil, false].include? each }
 
     true
   end
