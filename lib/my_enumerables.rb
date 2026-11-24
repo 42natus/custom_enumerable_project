@@ -18,13 +18,25 @@ module Enumerable
   def my_select
     return to_enum(:my_select) unless block_given?
 
-    result = []
+    if self.is_a? Array
+      result = []
 
-    self.my_each do |each|
-      result << each if yield(each)
+      self.my_each do |each|
+        result << each if yield(each)
+      end
+
+      return result
     end
 
-    result
+    if self.is_a? Hash
+      result = {}
+
+      self.my_each_pair do |key, value|
+        result[key] = value if yield(key, value)
+      end
+
+      return result
+    end
   end
 
   def my_all?(object = nil)
