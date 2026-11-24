@@ -58,19 +58,25 @@ module Enumerable
 
   def my_any?(pattern = nil)
     if pattern
-      self.my_each { |each| return true if pattern === each }
+      self.to_a.my_each { |each| return true if pattern === each }
 
       return false
     end
 
     if block_given?
-      self.my_each { |each| return true if yield(each) }
+      array_proc = Proc.new { |each| return true if yield(each) }
+
+      hash_proc = Proc.new { |key, val| return true if yield(key, val) }
+
+      check = self.is_a?(Array) ? array_proc : hash_proc
+
+      self.my_each(&check)
 
       return false
     end
 
     # no block and no argument given, return truthiness of any element
-    self.my_each { |each| return true unless [nil, false].include? each }
+    self.to_a.my_each { |each| return true unless [nil, false].include? each }
 
     false
   end
