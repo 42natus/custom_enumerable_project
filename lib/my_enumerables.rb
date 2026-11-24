@@ -3,11 +3,9 @@ module Enumerable
   def my_each_with_index
     return to_enum(:my_each_with_index) unless block_given?
 
-    enumerable = self.is_a?(Hash) ? self.to_a : self
-    
     index = 0
 
-    enumerable.my_each do |each|
+    self.to_a.my_each do |each|
       yield(each, index)
       index = index.next
     end
@@ -18,25 +16,17 @@ module Enumerable
   def my_select
     return to_enum(:my_select) unless block_given?
 
-    if self.is_a? Array
-      result = []
+    result = self.is_a?(Array) ? [] : {}
 
-      self.my_each do |each|
-        result << each if yield(each)
-      end
+    array_proc = Proc.new { |item| result << item if yield(item) }
 
-      return result
-    end
+    hash_proc = Proc.new { |key, val| result[key] = val if yield(key, val) }
 
-    if self.is_a? Hash
-      result = {}
+    filter = self.is_a?(Array) ? array_proc : hash_proc
 
-      self.my_each_pair do |key, value|
-        result[key] = value if yield(key, value)
-      end
+    self.my_each(&filter)
 
-      return result
-    end
+    result
   end
 
   def my_all?(object = nil)
@@ -157,7 +147,7 @@ end
 
 # Custom `each` (`each_pair`) for Hash class.
 class Hash
-  def my_each_pair
+  def my_each
     return enum_for(__method__) unless block_given?
 
     for key, value in self
