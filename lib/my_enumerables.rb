@@ -111,21 +111,25 @@ module Enumerable
     total = 0
 
     if object
-      self.my_each { |each| total += 1 if each == object }
+      self.to_a.my_each { |each| total += 1 if each == object }
 
       return total
     end
-
+    
     if block_given?
-      self.my_each { |each| total += 1 if yield(each) }
+      array_proc = Proc.new { |each| total += 1 if yield(each) }
+
+      hash_proc = Proc.new { |key, val| total += 1 if yield(key, val) }
+
+      check = self.is_a?(Array) ? array_proc : hash_proc
+
+      self.my_each(&check)
 
       return total
     end
 
     # no block and no argument given, return the size of the enumerable
-    self.my_each { total += 1 }
-
-    return total
+    self.size
   end
 
   def my_map
